@@ -7,7 +7,7 @@ var paddle1X = 10,paddle1Height = 110;
 var paddle2Y = 685,paddle2Height = 70;
 
 var score1 = 0, score2 =0;
-var paddle1Y;
+var mouseY;
 
 var  playerscore =0;
 
@@ -27,7 +27,10 @@ scoreRightWrist = 0;
 
 //Define a variable to hold the status of the game
 
- 
+function preload(){
+ball_touch = loadSound("ball_touch_paddel.wav");
+ball_miss = loadSound("missed.wav"); 
+ }
 
 function setup(){
 var canvas =  createCanvas(700,600);
@@ -94,8 +97,8 @@ if(game_status == "start") // inside the if condition check if the game_status i
     fill(250,0,0);
     stroke(0,0,250);
     strokeWeight(0.5);
-    paddle1Y = rightWristY; 
-    rect(paddle1X,paddle1Y,paddle1,paddle1Height,100);
+    mouseY  = rightWristY; 
+    rect(paddle1X,mouseY ,paddle1,paddle1Height,100);
 
 
     //pc computer paddle
@@ -168,11 +171,11 @@ function move(){
   if (ball.x-2.5*ball.r/2< 0){
   if (ball.y >= paddle1Y&& ball.y <= paddle1Y + paddle1Height) {
     ball.dx = -ball.dx+0.5; 
-    
+    ball_touch.play();
   }
   else{
     pcscore++;
-    
+    ball_miss.play();
     reset();
     navigator.vibrate(100);
   }
@@ -185,7 +188,7 @@ if(pcscore ==4){
     stroke("white");
     textSize(25);
     text("Game Over!",width/2,height/2);
-    text("Reload the page!",width/2,height/2+30)
+    text("Press restart button to play  again!",width/2,height/2+30)
     noLoop();
     pcscore = 0;
  }
@@ -208,13 +211,18 @@ function models(){
 
 //this function help to not go te paddle out of canvas
 function paddleInCanvas(){
-  if(paddle1Y+paddle1Height > height){
+  if(mouseY +paddle1Height > height){
     paddle1Y=height-paddle1Height;
   }
-  if(paddle1Y < 0){
-    paddle1Y =0;
+  if(mouseY  < 0){
+    mouseY  =0;
   }
  
   
 }
 
+function restart(){
+  pcscore = 0;
+  playerscore = 0;
+  loop();
+}
